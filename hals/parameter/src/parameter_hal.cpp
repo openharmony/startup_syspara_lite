@@ -15,6 +15,7 @@
 
 #include "parameter_hal.h"
 
+#include <cstdio>
 #include <cstring>
 #include <fstream>
 #include <openssl/sha.h>
@@ -23,6 +24,7 @@
 #include "parameters.h"
 #include "sysparam_errno.h"
 #include "string_ex.h"
+#include "parse_syspara_int32.h"
 #include "init_param.h"
 
 static const char *g_emptyStr = "";
@@ -206,10 +208,22 @@ const char *HalGetSecurityPatchTag()
     return GetProperty("const.ohos.version.security_patch", &securityPatchTag);
 }
 
+int HalParseSysparaInt(const char *text)
+{
+    int32_t value = 0;
+    if (!OHOS::ParseSysparaInt32(text, value)) {
+        if (text != nullptr && *text != '\0') {
+            (void)fprintf(stderr, "syspara: invalid persist int '%s'\n", text);
+        }
+        return 0;
+    }
+    return value;
+}
+
 int HalGetFirstApiVersion()
 {
     static const char *firstApiVersion = nullptr;
-    return atoi(GetProperty("const.product.firstapiversion", &firstApiVersion));
+    return HalParseSysparaInt(GetProperty("const.product.firstapiversion", &firstApiVersion));
 }
 
 const char *HalGetDisplayVersion()
