@@ -159,7 +159,7 @@ const char *GetOSFullName(void)
 
 int GetSdkApiVersion(void)
 {
-    return atoi(HalGetSdkApiVersion());
+    return HalParseSysparaInt(HalGetSdkApiVersion());
 }
 
 int GetFirstApiVersion(void)
@@ -178,7 +178,7 @@ const char *GetIncrementalVersion(void)
 }
 static int GetSdkApiLevel(void)
 {
-    return atoi(HalGetSdkApiLevel());
+    return HalParseSysparaInt(HalGetSdkApiLevel());
 }
 static const char *BuildVersionId(void)
 {
